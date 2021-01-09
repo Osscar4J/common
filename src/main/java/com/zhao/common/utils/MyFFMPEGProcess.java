@@ -1,12 +1,12 @@
 package com.zhao.common.utils;
 
-import ws.schild.jave.process.ProcessLocator;
-import ws.schild.jave.process.ffmpeg.DefaultFFMPEGLocator;
-import ws.schild.jave.utils.RBufferedReader;
+//import ws.schild.jave.process.ProcessLocator;
+//import ws.schild.jave.process.ffmpeg.DefaultFFMPEGLocator;
+//import ws.schild.jave.utils.RBufferedReader;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+//import java.io.InputStreamReader;
 import java.util.function.Consumer;
 
 /**
@@ -23,8 +23,8 @@ public class MyFFMPEGProcess implements AutoCloseable {
     private String ffmpegPath = null;
 
     public MyFFMPEGProcess(){
-        ProcessLocator locator = new DefaultFFMPEGLocator();
-        this.ffmpegPath = locator.getExecutablePath();
+//        ProcessLocator locator = new DefaultFFMPEGLocator();
+//        this.ffmpegPath = locator.getExecutablePath();
     }
 
     public MyFFMPEGProcess(String ffmpegPath){
@@ -36,13 +36,13 @@ public class MyFFMPEGProcess implements AutoCloseable {
         try {
             process = runtime.exec(this.ffmpegPath + " " + commend);
             errorStream = process.getErrorStream();
-            RBufferedReader reader = new RBufferedReader(new InputStreamReader(errorStream));
-            String line;
-            while((line = reader.readLine()) != null) {
-                if (onMessage != null){
-                    onMessage.accept(line);
-                }
-            }
+//            RBufferedReader reader = new RBufferedReader(new InputStreamReader(errorStream));
+//            String line;
+//            while((line = reader.readLine()) != null) {
+//                if (onMessage != null){
+//                    onMessage.accept(line);
+//                }
+//            }
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);

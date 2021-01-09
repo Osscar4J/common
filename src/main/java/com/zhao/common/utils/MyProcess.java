@@ -1,10 +1,10 @@
 package com.zhao.common.utils;
 
-import ws.schild.jave.utils.RBufferedReader;
+//import ws.schild.jave.utils.RBufferedReader;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+//import java.io.InputStreamReader;
 import java.util.function.Consumer;
 
 /**
@@ -33,12 +33,12 @@ public class MyProcess implements AutoCloseable {
             } else {
                 inputStream = process.getInputStream();
             }
-            RBufferedReader reader = new RBufferedReader(new InputStreamReader(inputStream));
+//            RBufferedReader reader = new RBufferedReader(new InputStreamReader(inputStream));
             StringBuilder sb = new StringBuilder();
-            String line;
-            while((line = reader.readLine()) != null) {
-                sb.append(line).append("\n");
-            }
+//            String line;
+//            while((line = reader.readLine()) != null) {
+//                sb.append(line).append("\n");
+//            }
             if (status != 0 && errorCall != null){
                 errorCall.accept(sb.toString());
             } else if (callback != null){
