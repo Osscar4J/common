@@ -38,9 +38,11 @@ public class FileUtil {
     public static void transferTo(File source, File target, boolean isAppend, boolean delSource){
         FileInputStream fileInputStream = null;
         FileOutputStream outputStream = null;
-        File targetDir = new File(target.getParent());
-        if (!targetDir.exists()){
-            targetDir.mkdirs();
+        if (target.getParent() != null){
+            File targetDir = new File(target.getParent());
+            if (!targetDir.exists()){
+                targetDir.mkdirs();
+            }
         }
         byte[] byt = new byte[10 * 1024 * 1024];
         int len;
@@ -50,8 +52,6 @@ public class FileUtil {
             while ((len = fileInputStream.read(byt)) != -1) {
                 outputStream.write(byt, 0, len);
             }
-            if (delSource)
-                source.delete();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -67,6 +67,8 @@ public class FileUtil {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            if (delSource)
+                source.delete();
         }
 
     }
