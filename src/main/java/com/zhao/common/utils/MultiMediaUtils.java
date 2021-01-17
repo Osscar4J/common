@@ -2,15 +2,15 @@ package com.zhao.common.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-//import ws.schild.jave.EncoderException;
-//import ws.schild.jave.MultimediaObject;
-//import ws.schild.jave.ScreenExtractor;
-//import ws.schild.jave.VideoProcessor;
-//import ws.schild.jave.info.MultimediaInfo;
-//import ws.schild.jave.info.VideoInfo;
-//import ws.schild.jave.info.VideoSize;
-//import ws.schild.jave.process.ffmpeg.DefaultFFMPEGLocator;
-//import ws.schild.jave.progress.VideoProgressListener;
+import ws.schild.jave.EncoderException;
+import ws.schild.jave.MultimediaObject;
+import ws.schild.jave.ScreenExtractor;
+import ws.schild.jave.VideoProcessor;
+import ws.schild.jave.info.MultimediaInfo;
+import ws.schild.jave.info.VideoInfo;
+import ws.schild.jave.info.VideoSize;
+import ws.schild.jave.process.ffmpeg.DefaultFFMPEGLocator;
+import ws.schild.jave.progress.VideoProgressListener;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -72,8 +72,8 @@ public class MultiMediaUtils {
      * @Date 2020/11/24 16:33
      */
     public static void extractFrame(File video, int width, int height, int seconds, File target, int quality){
-//        MultimediaObject multimediaObject = new MultimediaObject(video, new DefaultFFMPEGLocator());
-//        ScreenExtractor screenExtractor = new ScreenExtractor();
+        MultimediaObject multimediaObject = new MultimediaObject(video, new DefaultFFMPEGLocator());
+        ScreenExtractor screenExtractor = new ScreenExtractor();
         if (target.exists()){
             if (!target.delete()){
                 throw new RuntimeException("输出目标已存在，且无法删除");
@@ -81,18 +81,18 @@ public class MultiMediaUtils {
         }
         if (quality < 1 || quality > 31)
             quality = 1;
-//        try {
-//            MultimediaInfo multimediaInfo = multimediaObject.getInfo();
-//            VideoInfo videoInfo = multimediaInfo.getVideo();
-//            if (width < 1 || width > videoInfo.getSize().getWidth())
-//                width = videoInfo.getSize().getWidth();
-//            if (height < 1 || height > videoInfo.getSize().getHeight())
-//                height = videoInfo.getSize().getHeight();
-//            screenExtractor.render(multimediaObject, width, height, seconds, target, quality);
-//        } catch (EncoderException e) {
-//            e.printStackTrace();
-//            throw new RuntimeException(e);
-//        }
+        try {
+            MultimediaInfo multimediaInfo = multimediaObject.getInfo();
+            VideoInfo videoInfo = multimediaInfo.getVideo();
+            if (width < 1 || width > videoInfo.getSize().getWidth())
+                width = videoInfo.getSize().getWidth();
+            if (height < 1 || height > videoInfo.getSize().getHeight())
+                height = videoInfo.getSize().getHeight();
+            screenExtractor.render(multimediaObject, width, height, seconds, target, quality);
+        } catch (EncoderException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -128,34 +128,34 @@ public class MultiMediaUtils {
      * @Date 2020/11/24 17:02
      */
     public static void mergeVideos(List<File> videos, File destination, Runnable onComplete, Consumer<Double> onProgress){
-//        VideoProcessor videoProcessor = new VideoProcessor();
+        VideoProcessor videoProcessor = new VideoProcessor();
         if (destination.exists()){
             if (!destination.delete())
                 throw new RuntimeException("输出目标已存在，且无法删除");
         }
-//        try {
-//            videoProcessor.catClipsTogether(videos, destination, new VideoProgressListener() {
-//                @Override
-//                public void onBegin() { }
-//                @Override
-//                public void onMessage(String s) { }
-//                @Override
-//                public void onProgress(Double aDouble) {
-//                    if (onProgress != null)
-//                        onProgress.accept(aDouble);
-//                }
-//                @Override
-//                public void onError(String s) { }
-//                @Override
-//                public void onComplete() {
-//                    if (onComplete != null)
-//                        onComplete.run();
-//                }
-//            });
-//        } catch (Exception e){
-//            e.printStackTrace();
-//            throw new RuntimeException(e);
-//        }
+        try {
+            videoProcessor.catClipsTogether(videos, destination, new VideoProgressListener() {
+                @Override
+                public void onBegin() { }
+                @Override
+                public void onMessage(String s) { }
+                @Override
+                public void onProgress(Double aDouble) {
+                    if (onProgress != null)
+                        onProgress.accept(aDouble);
+                }
+                @Override
+                public void onError(String s) { }
+                @Override
+                public void onComplete() {
+                    if (onComplete != null)
+                        onComplete.run();
+                }
+            });
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -397,33 +397,33 @@ public class MultiMediaUtils {
      * @Date 2020/11/25 17:28
      */
     public static void video2gif(File source, File target, int startSeconds, int seconds, int width, int height, Consumer<String> onMessage){
-//        MultimediaObject multimediaObject = new MultimediaObject(source);
-//        try {
-//            VideoInfo videoInfo = multimediaObject.getInfo().getVideo();
-//            VideoSize size = videoInfo.getSize();
-//            if (width <= 0)
-//                width = size.getWidth();
-//            if (height == -1){ // 高度自适应
-//                height = size.getHeight() / (size.getWidth()/width);
-//            }
-//            if (height <= 0)
-//                height = size.getHeight();
-//            checkTargetFile(target);
-//            List<String> arguments = new ArrayList<>(8);
-//            arguments.add("-i");
-//            arguments.add(source.getAbsolutePath());
-//            arguments.add("-ss");
-//            arguments.add(parseSeconds2FormatTime(startSeconds));
-//            arguments.add("-t");
-//            arguments.add(String.valueOf(seconds));
-//            arguments.add("-s");
-//            arguments.add(width + "x" + height);
-//            arguments.add("-pix_fmt rgb24");
-//            arguments.add(target.getAbsolutePath());
-//            execute(arguments, onMessage);
-//        } catch (EncoderException e) {
-//            throw new RuntimeException(e);
-//        }
+        MultimediaObject multimediaObject = new MultimediaObject(source);
+        try {
+            VideoInfo videoInfo = multimediaObject.getInfo().getVideo();
+            VideoSize size = videoInfo.getSize();
+            if (width <= 0)
+                width = size.getWidth();
+            if (height == -1){ // 高度自适应
+                height = size.getHeight() / (size.getWidth()/width);
+            }
+            if (height <= 0)
+                height = size.getHeight();
+            checkTargetFile(target);
+            List<String> arguments = new ArrayList<>(8);
+            arguments.add("-i");
+            arguments.add(source.getAbsolutePath());
+            arguments.add("-ss");
+            arguments.add(parseSeconds2FormatTime(startSeconds));
+            arguments.add("-t");
+            arguments.add(String.valueOf(seconds));
+            arguments.add("-s");
+            arguments.add(width + "x" + height);
+            arguments.add("-pix_fmt rgb24");
+            arguments.add(target.getAbsolutePath());
+            execute(arguments, onMessage);
+        } catch (EncoderException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static void checkTargetFile(File target){
