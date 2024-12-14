@@ -91,9 +91,7 @@ public class HttpClient {
 	
 	public static String execute(Request request, OkHttpClient client) {
 		try {
-			if (client == null)
-				client = httpClient;
-			Response response = client.newCall(request).execute();
+			Response response = executeWithResponse(request, client);
 			if (response.isSuccessful()) {
 				return response.body().string();
 			}
@@ -101,6 +99,16 @@ public class HttpClient {
 			throw new RuntimeException(e);
 		}
 		return "{\"error\":\"fail\"}";
+	}
+
+	public static Response executeWithResponse(Request request, OkHttpClient client) {
+		try {
+			if (client == null)
+				client = httpClient;
+			return client.newCall(request).execute();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 	//实现X509TrustManager接口

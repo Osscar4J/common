@@ -7,9 +7,9 @@ import com.zhao.common.respvo.ResponseStatus;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -53,7 +53,6 @@ public class JwtTokenUtil {
             throw new BusinessException(ResponseStatus.USER_NOT_FOUND);
         Map<String, Object> claims = new HashMap<>(4);
         claims.put("id", user.getId());
-        claims.put("roleId", user.getRoleId());
         claims.put("exp", generateExpirationDate().getTime());
         return generateToken(claims);
     }
@@ -130,7 +129,6 @@ public class JwtTokenUtil {
             return null;
         UserInfo user = new UserInfo();
         user.setId((Integer) claims.get("id"));
-        user.setRoleId((Integer) claims.get("roleId"));
         TokenModel tokenModel = new TokenModel();
         tokenModel.setUser(user);
         // 检查是否token是否在15分钟后过期，如果是则生成新的token

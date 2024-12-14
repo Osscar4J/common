@@ -2,7 +2,7 @@ package com.zhao.common.utils;
 
 import com.zhao.common.exception.BusinessException;
 import com.zhao.common.respvo.ResponseStatus;
-import org.springframework.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public class Asserts {
 

@@ -613,4 +613,132 @@ public class ImageUtils {
 		}
 	}
 
+	/**
+	 * 生成文字图片
+	 * @Author zhaolianqi
+	 * @Date 2021/5/26 12:49
+	 * @param width 图片宽
+	 * @param height 图片高
+	 * @param padding 内边距
+	 * @param color 字体颜色，int数组，三个值分别对应 R G B
+	 * @param backgroundColor  背景颜色，int数组，三个值分别对应 R G B
+	 * @param fontSize 字体大小，一般 20 左右
+	 * @param lineMargin 行间距
+	 * @param backgroundImage 背景图
+	 * @param text 文字内容
+	 * @param savePath 保存文件名，包含路径
+	 */
+	public static void createImage(int width, int height, int padding, int[] color, int[] backgroundColor, int fontSize, int lineMargin, File backgroundImage, String text, String savePath){
+		createImage(width, height, padding, color, backgroundColor, fontSize, lineMargin, backgroundImage, text, savePath);
+	}
+
+	/**
+	 * 生成文字图片
+	 * @Author zhaolianqi
+	 * @Date 2021/5/26 12:49
+	 * @param width 图片宽
+	 * @param height 图片高
+	 * @param padding 内边距
+	 * @param color 字体颜色，int数组，三个值分别对应 R G B
+	 * @param backgroundColor  背景颜色，int数组，三个值分别对应 R G B
+	 * @param fontSize 字体大小，一般 20 左右
+	 * @param lineMargin 行间距
+	 * @param backgroundImage 背景图
+	 * @param text 文字内容
+	 * @param outputStream 输出流
+	 */
+	public static void createImage(int width, int height, int padding, int[] color, int[] backgroundColor, int fontSize, int lineMargin, File backgroundImage, String text, OutputStream outputStream){
+		createImage(width, height, padding, color, backgroundColor, fontSize, lineMargin, backgroundImage, text, null, outputStream);
+	}
+
+	/**
+	 * 生成文字图片
+	 * @Author zhaolianqi
+	 * @Date 2021/5/26 12:49
+	 * @param width 图片宽
+	 * @param height 图片高
+	 * @param padding 内边距
+	 * @param color 字体颜色，int数组，三个值分别对应 R G B
+	 * @param backgroundColor  背景颜色，int数组，三个值分别对应 R G B
+	 * @param fontSize 字体大小，一般 20 左右
+	 * @param lineMargin 行间距
+	 * @param backgroundImage 背景图
+	 * @param text 文字内容
+	 * @param savePath 保存文件名，包含路径
+	 * @param outputStream 输出流，优先级高于输出文件
+	 */
+	public static void createImage(int width, int height, int padding, int[] color, int[] backgroundColor, int fontSize, int lineMargin, File backgroundImage, String text, String savePath, OutputStream outputStream){
+		if (color.length < 3)
+			color = new int[]{0, 0, 0};
+		if (backgroundColor.length < 3)
+			backgroundColor = new int[]{255, 255, 255};
+		BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		Graphics2D g2 = (Graphics2D) bi.getGraphics();
+		if (backgroundImage == null){
+			g2.setColor(new Color(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
+			g2.fillRect(0, 0, width, height);
+		} else {
+			try {
+				g2.drawImage(ImageIO.read(backgroundImage), 0, 0, width, height, null);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		g2.setColor(new Color(color[0], color[1], color[2]));
+		Font font = new Font("宋体", Font.PLAIN, fontSize);
+		g2.setFont(font);
+		// 抗锯齿
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		// 计算文字长度
+		FontMetrics fm = g2.getFontMetrics(font);
+		String[] msgArr = text.split("\n");
+
+		int line = 0;
+		for (String content : msgArr) {
+			int textWidth = fm.stringWidth(content);
+			while (textWidth + padding*2 > width) {
+				int subPos = content.length() - 1;
+				String s = content.substring(0, subPos);
+				textWidth = fm.stringWidth(s);
+				while (textWidth + padding*2 > width) {
+					subPos--;
+					s = content.substring(0, subPos);
+					textWidth = fm.stringWidth(s);
+				}
+				g2.drawString(s, padding, padding + lineMargin + fm.getHeight() * (line + 1) - 12);
+				line++;
+				content = content.substring(subPos);
+				textWidth = fm.stringWidth(content);
+			}
+			g2.drawString(content, padding, padding + lineMargin + fm.getHeight() * (line + 1) - 12);
+			line++;
+		}
+		g2.dispose();
+		try {
+			if (outputStream == null)
+				outputStream = new FileOutputStream(savePath);
+			ImageIO.write(bi, "JPEG", outputStream);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+//	public static void main(String[] args) {
+//		String msg = "填充\nhello world\n你好世界\ng2.fillRect(0, 0, width, height);// 填充整张图片(其实就是设置背景颜色)\n" +
+//				"String drawText = tempText.substring(0 , subPos);\n" +
+//				"public static void drawString(Graphics2D g , Font font , String text , int x , int y , int maxWidth)";
+//		createImage(
+//				560,
+//				960,
+//				15,
+//				new int[]{0,0,0},
+//				new int[]{255,255,255},
+//				20,
+//				10,
+//				new File("F:\\images\\temp\\temm\\12312.png"),
+//				msg,
+//				"F:\\images\\temp\\test.jpg");
+//		System.out.println("done");
+//	}
+
 }

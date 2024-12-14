@@ -2,13 +2,8 @@ package com.zhao.common.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,9 +46,7 @@ public class SensitiveWordFilter {
         sensitiveMap = new HashMap<>(1024);
         BufferedReader reader = null;
         try {
-            Resource resource = new ClassPathResource("sensi_words.txt");
-            InputStream is = resource.getInputStream();
-
+            InputStream is = new FileInputStream(new File("sensi_words.txt"));
             reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
             for (String line = reader.readLine(); line != null; line = reader.readLine()){
                 addSensitiveWord(line);

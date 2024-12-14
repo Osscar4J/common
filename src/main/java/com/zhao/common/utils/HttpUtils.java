@@ -1,6 +1,7 @@
 package com.zhao.common.utils;
 
 import okhttp3.*;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,6 +9,7 @@ import javax.net.ssl.*;
 import java.io.File;
 import java.io.IOException;
 import java.security.SecureRandom;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class HttpUtils {
@@ -116,13 +118,23 @@ public class HttpUtils {
         return get(url, null);
     }
 
+    public static String post(String url, String requestBody, Callback callback){
+        return post(url, requestBody, callback, null, null);
+    }
+
+    public static String postJson(String url, String requestBody, Map<String, String> headers){
+        return post(url, requestBody, null, headers, "application/json;charset=UTF-8");
+    }
+
     /**
      * POST请求
      * @param url 地址
      * @param requestBody POST参数
      * @param callback 回调，如果是同步的请求就传null
      */
-    public static String post(String url, String requestBody, Callback callback){
+    public static String post(String url, String requestBody, Callback callback, Map<String, String> headers, String contentType){
+        if (StringUtils.isEmpty(contentType))
+            contentType = "application/x-www-form-urlencoded";
         String result = null;
 
         if (httpClient == null)
@@ -135,11 +147,14 @@ public class HttpUtils {
             client = httpsClient;
         }
 
-        MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
-        Request request = new Request.Builder()
-                .url(url)
-                .post(RequestBody.create(mediaType, requestBody))
-                .build();
+        MediaType mediaType = MediaType.parse(contentType);
+        Request.Builder builder = new Request.Builder().url(url);
+        if (headers != null && !headers.isEmpty()){
+            for (String s : headers.keySet()) {
+                builder.header(s, headers.get(s));
+            }
+        }
+        Request request = builder.post(RequestBody.create(mediaType, requestBody)).build();
         if (callback != null){
             client.newCall(request).enqueue(callback);
         } else {

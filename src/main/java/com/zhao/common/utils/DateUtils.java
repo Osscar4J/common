@@ -788,4 +788,31 @@ public class DateUtils {
 		return Date.from(instant);
 	}
 
+	/**
+	 * 获取当天0点
+	 * @return 日期对象
+	 */
+	public static Date getToday0Hour(){
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		return calendar.getTime();
+	}
+
+	/**
+	 * 获取当天0点的时间
+	 * @param format 指定格式
+	 * @return 字符串，如：yyyy-MM-dd hh:mm:ss
+	 */
+	public static String getToday0Hour(String format){
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		if (format == null)
+			return DateToString(calendar.getTime(), DateStyle.YYYY_MM_DD_HH_MM_SS);
+		return DateToString(calendar.getTime(), format);
+	}
+
 }
